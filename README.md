@@ -43,12 +43,15 @@ module "castai_gke_cluster" {
       tags           = {
         "node-config" : "default"
       }
+      gke = {
+        max_pods_per_node = 110
+      }
     }
   }
 }
 ```
 
-[Example usage](https://github.com/castai/terraform-provider-castai/blob/master/examples/gke_cluster/main.tf)
+[Example usage](https://github.com/castai/terraform-provider-castai/tree/master/examples/gke)
 
 <!-- BEGIN_TF_DOCS -->
 ## Requirements
@@ -78,6 +81,7 @@ No modules.
 | [castai_autoscaler.castai_autoscaler_policies](https://registry.terraform.io/providers/castai/castai/latest/docs/resources/autoscaler) | resource |
 | [castai_gke_cluster.castai_cluster](https://registry.terraform.io/providers/castai/castai/latest/docs/resources/gke_cluster) | resource |
 | [castai_node_configuration.this](https://registry.terraform.io/providers/castai/castai/latest/docs/resources/node_configuration) | resource |
+| [castai_node_configuration_default.this](https://registry.terraform.io/providers/castai/castai/latest/docs/resources/node_configuration_default) | resource |
 | [helm_release.castai_agent](https://registry.terraform.io/providers/hashicorp/helm/latest/docs/resources/release) | resource |
 | [helm_release.castai_cluster_controller](https://registry.terraform.io/providers/hashicorp/helm/latest/docs/resources/release) | resource |
 | [helm_release.castai_evictor](https://registry.terraform.io/providers/hashicorp/helm/latest/docs/resources/release) | resource |
