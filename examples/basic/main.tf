@@ -39,6 +39,7 @@ module "castai-gke-cluster" {
       tags           = {
         "node-config" : "default"
       }
+      max_pods_per_node = 110
     }
   }
 

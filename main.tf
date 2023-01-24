@@ -11,12 +11,15 @@ resource "castai_node_configuration" "this" {
 
   cluster_id = castai_gke_cluster.castai_cluster.id
 
-  name           = try(each.value.name, each.key)
-  disk_cpu_ratio = try(each.value.disk_cpu_ratio, 0)
-  subnets        = try(each.value.subnets, null)
-  ssh_public_key = try(each.value.ssh_public_key, null)
-  image          = try(each.value.image, null)
-  tags           = try(each.value.tags, {})
+  name              = try(each.value.name, each.key)
+  disk_cpu_ratio    = try(each.value.disk_cpu_ratio, 0)
+  subnets           = try(each.value.subnets, null)
+  ssh_public_key    = try(each.value.ssh_public_key, null)
+  image             = try(each.value.image, null)
+  tags              = try(each.value.tags, {})
+  gke {
+    max_pods_per_node = try(each.value.max_pods_per_node, 110)
+  }
 }
 
 resource "castai_node_configuration_default" "this" {
