@@ -45,6 +45,31 @@ module "castai-gke-cluster" {
     }
   }
 
+  node_templates = {
+    spot_tmpl = {
+      configuration_id = module.castai-gke-cluster.castai_node_configurations["default"]
+
+      should_taint = true
+      custom_label = {
+        key = "custom-key"
+        value = "label-value"
+      }
+
+      constraints = {
+        fallback_restore_rate_seconds = 1800
+        spot = true
+        use_spot_fallbacks = true
+        min_cpu = 4
+        max_cpu = 100
+        instance_families = {
+          exclude = ["e2"]
+        }
+        compute_optimized = false
+        storage_optimized = false
+      }
+    }
+  }
+
   # Full schema can be found here https://api.cast.ai/v1/spec/#/PoliciesAPI/PoliciesAPIUpsertClusterPolicies
   autoscaler_policies_json = <<-EOT
     {
