@@ -76,7 +76,9 @@ module "castai_gke_cluster" {
 }
 ```
 
-[Example usage](https://github.com/castai/terraform-provider-castai/tree/master/examples/gke)
+# Examples
+
+Usage examples are located in [terraform provider repo](https://github.com/castai/terraform-provider-castai/tree/master/examples/gke)
 
 <!-- BEGIN_TF_DOCS -->
 ## Requirements
