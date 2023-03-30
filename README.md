@@ -82,6 +82,7 @@ module "castai_gke_cluster" {
         }
         compute_optimized = false
         storage_optimized = false
+        architectures = ["amd64"]
       }
 
       custom_instances_enabled = true
@@ -108,8 +109,8 @@ Usage examples are located in [terraform provider repo](https://github.com/casta
 
 | Name | Version |
 |------|---------|
-| <a name="provider_castai"></a> [castai](#provider\_castai) | >= 3.4.0 |
-| <a name="provider_helm"></a> [helm](#provider\_helm) | >= 2.0.0 |
+| <a name="provider_castai"></a> [castai](#provider\_castai) | 3.6.0 |
+| <a name="provider_helm"></a> [helm](#provider\_helm) | 2.9.0 |
 
 ## Modules
 
