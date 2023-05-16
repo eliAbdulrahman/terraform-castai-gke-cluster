@@ -7,12 +7,13 @@ resource "castai_gke_cluster" "castai_cluster" {
 }
 
 resource "castai_node_configuration" "this" {
-  for_each = {for k, v in var.node_configurations : k => v}
+  for_each = { for k, v in var.node_configurations : k => v }
 
   cluster_id = castai_gke_cluster.castai_cluster.id
 
   name           = try(each.value.name, each.key)
   disk_cpu_ratio = try(each.value.disk_cpu_ratio, 0)
+  min_disk_size  = try(each.value.min_disk_size, 100)
   subnets        = try(each.value.subnets, null)
   ssh_public_key = try(each.value.ssh_public_key, null)
   image          = try(each.value.image, null)
@@ -29,7 +30,7 @@ resource "castai_node_configuration_default" "this" {
 }
 
 resource "castai_node_template" "this" {
-  for_each = {for k, v in var.node_templates : k => v}
+  for_each = { for k, v in var.node_templates : k => v }
 
   cluster_id = castai_gke_cluster.castai_cluster.id
 
