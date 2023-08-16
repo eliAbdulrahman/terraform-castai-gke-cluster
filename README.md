@@ -83,7 +83,8 @@ module "castai_gke_cluster" {
         }
         compute_optimized = false
         storage_optimized = false
-        architectures = ["amd64"]
+        is_gpu_only       = false
+        architectures     = ["amd64"]
       }
 
       custom_instances_enabled = true
