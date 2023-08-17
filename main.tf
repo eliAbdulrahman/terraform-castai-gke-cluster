@@ -68,6 +68,7 @@ resource "castai_node_template" "this" {
     content {
       compute_optimized                           = try(constraints.value.compute_optimized, false)
       storage_optimized                           = try(constraints.value.storage_optimized, false)
+      is_gpu_only                                 = try(constraints.value.is_gpu_only, false)
       spot                                        = try(constraints.value.spot, false)
       on_demand                                   = try(constraints.value.on_demand, null)
       use_spot_fallbacks                          = try(constraints.value.use_spot_fallbacks, false)
