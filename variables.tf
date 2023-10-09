@@ -24,7 +24,7 @@ variable "gke_cluster_name" {
 variable "autoscaler_policies_json" {
   type        = string
   description = "Optional json object to override CAST AI cluster autoscaler policies"
-  default     = ""
+  default     = null
 }
 
 variable "delete_nodes_on_disconnect" {
