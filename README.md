@@ -93,6 +93,40 @@ module "castai_gke_cluster" {
 }
 ```
 
+Migrating from 3.x.x to 4.x.x
+---------------------------
+
+Version 4.x.x changed:
+* Removed `custom_label` attribute in `castai_node_template` resource. Use `custom_labels` instead.
+
+Old configuration:
+```terraform
+module "castai-gke-cluster" {
+  node_templates = {
+    spot_tmpl = {
+      custom_label = {
+        key = "custom-label-key-1"
+        value = "custom-label-value-1"
+      }
+    }
+  }
+}
+```
+
+New configuration:
+```terraform
+module "castai-gke-cluster" {
+  node_templates = {
+    spot_tmpl = {
+      custom_labels = {
+        custom-label-key-1 = "custom-label-value-1"
+      }
+    }
+  }
+}
+```
+
+
 # Examples
 
 Usage examples are located in [terraform provider repo](https://github.com/castai/terraform-provider-castai/tree/master/examples/gke)
