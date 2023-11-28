@@ -96,7 +96,7 @@ module "castai_gke_cluster" {
 Migrating from 3.x.x to 4.x.x
 ---------------------------
 
-Version 4.x.x changed:
+Version 4.x.x changes:
 * Removed `custom_label` attribute in `castai_node_template` resource. Use `custom_labels` instead.
 
 Old configuration:
