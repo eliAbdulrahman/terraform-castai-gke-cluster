@@ -11,6 +11,12 @@ variable "castai_api_token" {
   default = ""
 }
 
+variable "grpc_url" {
+  type        = string
+  description = "gRPC endpoint used by pod-pinner"
+  default     = "grpc.cast.ai:443"
+}
+
 variable "project_id" {
   type        = string
   description = "The project id from GCP"
