@@ -40,7 +40,7 @@ resource "castai_node_template" "this" {
   name                     = try(each.value.name, each.key)
   configuration_id         = try(each.value.configuration_id, null)
   is_default               = try(each.value.is_default, false)
-  is_enabled               = try(each.value.is_enabled, null)
+  is_enabled               = try(each.value.is_enabled, true)
   should_taint             = try(each.value.should_taint, true)
   custom_instances_enabled = try(each.value.custom_instances_enabled, false)
 
