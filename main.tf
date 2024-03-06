@@ -379,6 +379,7 @@ resource "helm_release" "castai_kvisor" {
   namespace        = "castai-agent"
   create_namespace = true
   cleanup_on_fail  = true
+  version = "0.16.74"
 
   values = var.kvisor_values
 
