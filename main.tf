@@ -105,6 +105,16 @@ resource "castai_node_template" "this" {
           on_demand = try(custom_priority.value.on_demand, false)
         }
       }
+
+      dynamic "node_affinity" {
+        for_each = flatten([lookup(constraints.value, "node_affinity", [])])
+
+        content {
+          name = try(node_affinity.value.name, null)
+          az_name = try(node_affinity.value.az_name, null)
+          instance_types = try(node_affinity.value.instance_types, [])
+        }
+      }
     }
   }
   depends_on = [ castai_autoscaler.castai_autoscaler_policies ]
