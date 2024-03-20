@@ -390,6 +390,10 @@ resource "helm_release" "castai_kvisor" {
   version = var.kvisor_version
   values = var.kvisor_values
 
+  lifecycle {
+    ignore_changes = [version]
+  }
+
   set {
     name  = "castai.clusterID"
     value = castai_gke_cluster.castai_cluster.id
