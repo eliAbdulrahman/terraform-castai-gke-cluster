@@ -17,6 +17,12 @@ variable "grpc_url" {
   default     = "grpc.cast.ai:443"
 }
 
+variable "api_grpc_addr" {
+  type        = string
+  description = "CAST AI GRPC API address"
+  default     = "api-grpc.cast.ai:443"
+}
+
 variable "project_id" {
   type        = string
   description = "The project id from GCP"
@@ -107,6 +113,12 @@ variable "kvisor_values" {
   description = "List of YAML formatted string values for kvisor helm chart"
   type        = list(string)
   default     = []
+}
+
+variable "kvisor_version" {
+  description = "Version of kvisor chart. If not provided, latest version will be used."
+  type        = string
+  default     = null
 }
 
 variable "wait_for_cluster_ready" {
