@@ -106,13 +106,13 @@ resource "castai_node_template" "this" {
         }
       }
 
-      dynamic "node_affinity" {
-        for_each = flatten([lookup(constraints.value, "node_affinity", [])])
+      dynamic "dedicated_node_affinity" {
+        for_each = flatten([lookup(constraints.value, "dedicated_node_affinity", [])])
 
         content {
-          name = try(node_affinity.value.name, null)
-          az_name = try(node_affinity.value.az_name, null)
-          instance_types = try(node_affinity.value.instance_types, [])
+          name = try(dedicated_node_affinity.value.name, null)
+          az_name = try(dedicated_node_affinity.value.az_name, null)
+          instance_types = try(dedicated_node_affinity.value.instance_types, [])
         }
       }
     }
