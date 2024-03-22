@@ -381,21 +381,17 @@ resource "castai_autoscaler" "castai_autoscaler_policies" {
 }
 
 resource "helm_release" "castai_kvisor" {
-  count = var.install_security_agent == true ? 1 : 0
-
   name             = "castai-kvisor"
   repository       = "https://castai.github.io/helm-charts"
   chart            = "castai-kvisor"
   namespace        = "castai-agent"
   create_namespace = true
   cleanup_on_fail  = true
-  version = "0.16.74"
-
+  version = var.kvisor_version
   values = var.kvisor_values
 
-  set {
-    name  = "castai.apiURL"
-    value = var.api_url
+  lifecycle {
+    ignore_changes = [version]
   }
 
   set {
@@ -409,7 +405,32 @@ resource "helm_release" "castai_kvisor" {
   }
 
   set {
-    name  = "structuredConfig.provider"
+    name  = "castai.grpcAddr"
+    value = var.api_grpc_addr
+  }
+
+  set {
+    name  = "controller.replicas"
+    value = var.install_security_agent == true ? 1 : 0
+  }
+
+  set {
+    name = "controller.extraArgs.kube-linter-enabled"
+    value = "true"
+  }
+
+  set {
+    name = "controller.extraArgs.image-scan-enabled"
+    value = "true"
+  }
+
+  set {
+    name = "controller.extraArgs.kube-bench-enabled"
+    value = "true"
+  }
+
+  set {
+    name = "controller.extraArgs.kube-bench-cloud-provider"
     value = "gke"
   }
 }
