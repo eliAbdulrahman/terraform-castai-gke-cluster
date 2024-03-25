@@ -43,11 +43,11 @@ module "castai_gke_cluster" {
       tags           = {
         "node-config" : "default"
       }
-      gke = {
-        max_pods_per_node = 110
-        network_tags      = ["dev"]
-        disk_type         = "pd-balanced"
-      }
+    
+       max_pods_per_node = 110
+       network_tags      = ["dev"]
+       disk_type         = "pd-balanced"
+      
     }
   }
   node_templates = {
