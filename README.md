@@ -81,8 +81,8 @@ module "castai_gke_cluster" {
         instance_families = {
           exclude = ["e2"]
         }
-        compute_optimized = false
-        storage_optimized = false
+        compute_optimized_status = "disabled"
+        storage_optimized_status = "disabled"
         is_gpu_only       = false
         architectures     = ["amd64"]
       }
@@ -125,7 +125,39 @@ module "castai-gke-cluster" {
   }
 }
 ```
+Migrating from 4.x.x to 5.x.x
+---------------------------
 
+Version 5.x.x changed:
+* Removed `compute_optimized` and `storage_optimized` attributes in `castai_node_template` resource, `constraints` object. Use `compute_optimized_status` and `storage_optimized_status` instead.
+
+Old configuration:
+```terraform
+module "castai-gke-cluster" {
+  node_templates = {
+    spot_tmpl = {
+      constraints = {
+        compute_optimized = false
+        storage_optimized = true
+      }
+    }
+  }
+}
+```
+
+New configuration:
+```terraform
+module "castai-gke-cluster" {
+  node_templates = {
+    spot_tmpl = {
+      constraints = {
+        compute_optimized_status = "disabled"
+        storage_optimized_status = "enabled"
+      }
+    }
+  }
+}
+```
 
 # Examples
 
