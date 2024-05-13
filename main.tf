@@ -141,7 +141,8 @@ resource "helm_release" "castai_agent" {
   cleanup_on_fail  = true
   wait             = true
 
-  values = var.agent_values
+  version = var.agent_version
+  values  = var.agent_values
 
   set {
     name  = "replicaCount"
@@ -185,37 +186,6 @@ resource "helm_release" "castai_agent" {
   }
 }
 
-resource "helm_release" "castai_evictor" {
-  name             = "castai-evictor"
-  repository       = "https://castai.github.io/helm-charts"
-  chart            = "castai-evictor"
-  namespace        = "castai-agent"
-  create_namespace = true
-  cleanup_on_fail  = true
-  wait             = true
-
-  values = var.evictor_values
-
-  set {
-    name  = "replicaCount"
-    value = "0"
-  }
-
-  dynamic "set" {
-    for_each = var.castai_components_labels
-    content {
-      name  = "podLabels.${set.key}"
-      value = set.value
-    }
-  }
-
-  depends_on = [helm_release.castai_agent]
-
-  lifecycle {
-    ignore_changes = [set, version]
-  }
-}
-
 resource "helm_release" "castai_cluster_controller" {
   name             = "cluster-controller"
   repository       = "https://castai.github.io/helm-charts"
@@ -225,7 +195,8 @@ resource "helm_release" "castai_cluster_controller" {
   cleanup_on_fail  = true
   wait             = true
 
-  values = var.cluster_controller_values
+  version = var.cluster_controller_version
+  values  = var.cluster_controller_values
 
   set {
     name  = "castai.clusterID"
@@ -285,6 +256,58 @@ resource "null_resource" "wait_for_cluster" {
   }
 }
 
+resource "helm_release" "castai_evictor" {
+  name             = "castai-evictor"
+  repository       = "https://castai.github.io/helm-charts"
+  chart            = "castai-evictor"
+  namespace        = "castai-agent"
+  create_namespace = true
+  cleanup_on_fail  = true
+  wait             = true
+
+  version = var.evictor_version
+  values  = var.evictor_values
+
+  set {
+    name  = "replicaCount"
+    value = "0"
+  }
+
+  set {
+    name  = "castai-evictor-ext.enabled"
+    value = "false"
+  }
+
+  dynamic "set" {
+    for_each = var.castai_components_labels
+    content {
+      name  = "podLabels.${set.key}"
+      value = set.value
+    }
+  }
+
+  depends_on = [helm_release.castai_agent]
+
+  lifecycle {
+    ignore_changes = [set, version]
+  }
+}
+
+resource "helm_release" "castai_evictor_ext" {
+  name             = "castai-evictor-ext"
+  repository       = "https://castai.github.io/helm-charts"
+  chart            = "castai-evictor-ext"
+  namespace        = "castai-agent"
+  create_namespace = false
+  cleanup_on_fail  = true
+  wait             = true
+
+  version = var.evictor_ext_version
+  values  = var.evictor_ext_values
+
+  depends_on = [helm_release.castai_evictor]
+}
+
 resource "helm_release" "castai_pod_pinner" {
   name             = "castai-pod-pinner"
   repository       = "https://castai.github.io/helm-charts"
@@ -293,6 +316,8 @@ resource "helm_release" "castai_pod_pinner" {
   create_namespace = true
   cleanup_on_fail  = true
   wait             = true
+
+  version = var.pod_pinner_version
 
   set {
     name  = "castai.clusterID"
@@ -349,7 +374,8 @@ resource "helm_release" "castai_spot_handler" {
   cleanup_on_fail  = true
   wait             = true
 
-  values = var.spot_handler_values
+  version = var.spot_handler_version
+  values  = var.spot_handler_values
 
   set {
     name  = "castai.provider"
@@ -385,13 +411,6 @@ resource "helm_release" "castai_spot_handler" {
   depends_on = [helm_release.castai_agent]
 }
 
-resource "castai_autoscaler" "castai_autoscaler_policies" {
-  autoscaler_policies_json = var.autoscaler_policies_json
-  cluster_id               = castai_gke_cluster.castai_cluster.id
-
-  depends_on = [helm_release.castai_agent, helm_release.castai_evictor]
-}
-
 resource "helm_release" "castai_kvisor" {
   count = var.install_security_agent ? 1 : 0
 
@@ -401,8 +420,9 @@ resource "helm_release" "castai_kvisor" {
   namespace        = "castai-agent"
   create_namespace = true
   cleanup_on_fail  = true
-  version          = var.kvisor_version
-  values           = var.kvisor_values
+
+  version = var.kvisor_version
+  values  = var.kvisor_values
 
   lifecycle {
     ignore_changes = [version]
@@ -442,4 +462,11 @@ resource "helm_release" "castai_kvisor" {
     name  = "controller.extraArgs.kube-bench-cloud-provider"
     value = "gke"
   }
+}
+
+resource "castai_autoscaler" "castai_autoscaler_policies" {
+  autoscaler_policies_json = var.autoscaler_policies_json
+  cluster_id               = castai_gke_cluster.castai_cluster.id
+
+  depends_on = [helm_release.castai_agent, helm_release.castai_evictor]
 }

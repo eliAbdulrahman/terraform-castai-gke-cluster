@@ -85,6 +85,48 @@ variable "install_security_agent" {
   description = "Optional flag for installation of security agent (https://docs.cast.ai/product-overview/console/security-insights/)"
 }
 
+variable "agent_version" {
+  description = "Version of castai-agent helm chart. Default latest"
+  type        = string
+  default     = null
+}
+
+variable "cluster_controller_version" {
+  description = "Version of castai-cluster-controller helm chart. Default latest"
+  type        = string
+  default     = null
+}
+
+variable "evictor_version" {
+  description = "Version of castai-evictor chart. Default latest"
+  type        = string
+  default     = null
+}
+
+variable "evictor_ext_version" {
+  description = "Version of castai-evictor-ext chart. Default latest"
+  type        = string
+  default     = null
+}
+
+variable "pod_pinner_version" {
+  description = "Version of pod-pinner helm chart. Default latest"
+  type        = string
+  default     = null
+}
+
+variable "spot_handler_version" {
+  description = "Version of castai-spot-handler helm chart. Default latest"
+  type        = string
+  default     = null
+}
+
+variable "kvisor_version" {
+  description = "Version of kvisor chart. If not provided, latest version will be used."
+  type        = string
+  default     = null
+}
+
 variable "agent_values" {
   description = "List of YAML formatted string values for agent helm chart"
   type        = list(string)
@@ -109,16 +151,16 @@ variable "evictor_values" {
   default     = []
 }
 
-variable "kvisor_values" {
-  description = "List of YAML formatted string values for kvisor helm chart"
+variable "evictor_ext_values" {
+  description = "List of YAML formatted string with evictor-ext values"
   type        = list(string)
   default     = []
 }
 
-variable "kvisor_version" {
-  description = "Version of kvisor chart. If not provided, latest version will be used."
-  type        = string
-  default     = null
+variable "kvisor_values" {
+  description = "List of YAML formatted string values for kvisor helm chart"
+  type        = list(string)
+  default     = []
 }
 
 variable "wait_for_cluster_ready" {
