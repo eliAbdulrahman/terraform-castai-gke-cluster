@@ -25,6 +25,7 @@ resource "castai_node_configuration" "this" {
     max_pods_per_node = try(each.value.max_pods_per_node, 110)
     network_tags      = try(each.value.network_tags, null)
     disk_type         = try(each.value.disk_type, null)
+    zones             = try(each.value.zones, null)
   }
 }
 
