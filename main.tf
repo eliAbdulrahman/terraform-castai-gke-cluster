@@ -38,12 +38,13 @@ resource "castai_node_template" "this" {
 
   cluster_id = castai_gke_cluster.castai_cluster.id
 
-  name                     = try(each.value.name, each.key)
-  configuration_id         = try(each.value.configuration_id, null)
-  is_default               = try(each.value.is_default, false)
-  is_enabled               = try(each.value.is_enabled, true)
-  should_taint             = try(each.value.should_taint, true)
-  custom_instances_enabled = try(each.value.custom_instances_enabled, false)
+  name                                          = try(each.value.name, each.key)
+  configuration_id                              = try(each.value.configuration_id, null)
+  is_default                                    = try(each.value.is_default, false)
+  is_enabled                                    = try(each.value.is_enabled, true)
+  should_taint                                  = try(each.value.should_taint, true)
+  custom_instances_enabled                      = try(each.value.custom_instances_enabled, false)
+  custom_instances_with_extended_memory_enabled = try(each.value.custom_instances_with_extended_memory_enabled, false)
 
   custom_labels = try(each.value.custom_labels, {})
 
@@ -62,8 +63,8 @@ resource "castai_node_template" "this" {
     content {
       compute_optimized                           = try(constraints.value.compute_optimized, null)
       storage_optimized                           = try(constraints.value.storage_optimized, null)
-      compute_optimized_state                    = try(constraints.value.compute_optimized_state, "")
-      storage_optimized_state                    = try(constraints.value.storage_optimized_state, "")
+      compute_optimized_state                     = try(constraints.value.compute_optimized_state, "")
+      storage_optimized_state                     = try(constraints.value.storage_optimized_state, "")
       is_gpu_only                                 = try(constraints.value.is_gpu_only, false)
       spot                                        = try(constraints.value.spot, false)
       on_demand                                   = try(constraints.value.on_demand, null)
