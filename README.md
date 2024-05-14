@@ -25,14 +25,14 @@ For Phase 2 onboarding credentials from `terraform-gke-iam` are required
 ```hcl
 module "castai_gke_cluster" {
   source = "castai/gke-cluster/castai"
-  
-  project_id = var.project_id
-  gke_cluster_name = var.cluster_name
-  gke_cluster_location = module.gke.location # cluster region or zone  
 
-  gke_credentials = module.castai_gke_iam.private_key
+  project_id           = var.project_id
+  gke_cluster_name     = var.cluster_name
+  gke_cluster_location = module.gke.location # cluster region or zone
+
+  gke_credentials            = module.castai_gke_iam.private_key
   delete_nodes_on_disconnect = var.delete_nodes_on_disconnect
-  autoscaler_policies_json      = var.autoscaler_policies_json
+  autoscaler_policies_json   = var.autoscaler_policies_json
 
   default_node_configuration = module.castai_gke_cluster.node_configurations["default"]
 
@@ -40,14 +40,14 @@ module "castai_gke_cluster" {
     default = {
       disk_cpu_ratio = 25
       subnets        = [module.vpc.subnets_ids[0]]
-      tags           = {
+      tags = {
         "node-config" : "default"
       }
-    
-       max_pods_per_node = 110
-       network_tags      = ["dev"]
-       disk_type         = "pd-balanced"
-      
+
+      max_pods_per_node = 110
+      network_tags      = ["dev"]
+      disk_type         = "pd-balanced"
+
     }
   }
   node_templates = {
@@ -63,31 +63,32 @@ module "castai_gke_cluster" {
 
       custom_taints = [
         {
-          key = "custom-taint-key-1"
+          key   = "custom-taint-key-1"
           value = "custom-taint-value-1"
         },
         {
-          key = "custom-taint-key-2"
+          key   = "custom-taint-key-2"
           value = "custom-taint-value-2"
         }
       ]
 
       constraints = {
         fallback_restore_rate_seconds = 1800
-        spot = true
-        use_spot_fallbacks = true
-        min_cpu = 4
-        max_cpu = 100
+        spot                          = true
+        use_spot_fallbacks            = true
+        min_cpu                       = 4
+        max_cpu                       = 100
         instance_families = {
           exclude = ["e2"]
         }
         compute_optimized_state = "disabled"
         storage_optimized_state = "disabled"
-        is_gpu_only       = false
-        architectures     = ["amd64"]
+        is_gpu_only             = false
+        architectures           = ["amd64"]
       }
 
-      custom_instances_enabled = true
+      custom_instances_enabled                      = true
+      custom_instances_with_extended_memory_enabled = true
     }
   }
 }
@@ -177,7 +178,7 @@ Usage examples are located in [terraform provider repo](https://github.com/casta
 
 | Name | Version |
 |------|---------|
-| <a name="provider_castai"></a> [castai](#provider\_castai) | ~> 7.0.0|
+| <a name="provider_castai"></a> [castai](#provider\_castai) | ~> 7.0.0 |
 | <a name="provider_helm"></a> [helm](#provider\_helm) | >= 2.0.0 |
 | <a name="provider_null"></a> [null](#provider\_null) | n/a |
 
