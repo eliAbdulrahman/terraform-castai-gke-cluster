@@ -25,7 +25,6 @@ resource "castai_node_configuration" "this" {
     max_pods_per_node = try(each.value.max_pods_per_node, 110)
     network_tags      = try(each.value.network_tags, null)
     disk_type         = try(each.value.disk_type, null)
-    zones             = try(each.value.zones, null)
   }
 }
 
@@ -77,6 +76,7 @@ resource "castai_node_template" "this" {
       min_memory                                  = try(constraints.value.min_memory, null)
       max_memory                                  = try(constraints.value.max_memory, null)
       architectures                               = try(constraints.value.architectures, ["amd64"])
+      azs                                         = try(constraints.value.azs, null)
 
       dynamic "instance_families" {
         for_each = flatten([lookup(constraints.value, "instance_families", [])])
