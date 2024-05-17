@@ -163,6 +163,12 @@ variable "kvisor_values" {
   default     = []
 }
 
+variable "self_managed" {
+  type        = bool
+  default     = false
+  description = "Whether CAST AI components' upgrades are managed by a customer; by default upgrades are managed CAST AI central system."
+}
+
 variable "wait_for_cluster_ready" {
   type        = bool
   description = "Wait for cluster to be ready before finishing the module execution, this option requires `castai_api_token` to be set"
