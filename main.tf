@@ -22,9 +22,9 @@ resource "castai_node_configuration" "this" {
   init_script       = try(each.value.init_script, null)
 
   gke {
-    max_pods_per_node = try(each.value.max_pods_per_node, 110)
-    network_tags      = try(each.value.network_tags, null)
-    disk_type         = try(each.value.disk_type, null)
+    max_pods_per_node               = try(each.value.max_pods_per_node, 110)
+    network_tags                    = try(each.value.network_tags, null)
+    disk_type                       = try(each.value.disk_type, null)
     use_ephemeral_storage_local_ssd = try(each.value.use_ephemeral_storage_local_ssd, null)
   }
 }
@@ -60,7 +60,8 @@ resource "castai_node_template" "this" {
   }
 
   dynamic "constraints" {
-    for_each = flatten([lookup(each.value, "constraints", [])])
+    for_each = [for constraints in flatten([lookup(each.value, "constraints", [])]) : constraints if constraints != null]
+
     content {
       compute_optimized                           = try(constraints.value.compute_optimized, null)
       storage_optimized                           = try(constraints.value.storage_optimized, null)
@@ -83,7 +84,7 @@ resource "castai_node_template" "this" {
       azs                                         = try(constraints.value.azs, null)
 
       dynamic "instance_families" {
-        for_each = flatten([lookup(constraints.value, "instance_families", [])])
+        for_each = [for instance_families in flatten([lookup(constraints.value, "instance_families", [])]) : instance_families if instance_families != null]
 
         content {
           include = try(instance_families.value.include, [])
@@ -92,7 +93,8 @@ resource "castai_node_template" "this" {
       }
 
       dynamic "gpu" {
-        for_each = flatten([lookup(constraints.value, "gpu", [])])
+        for_each = [for gpu in flatten([lookup(constraints.value, "gpu", [])]) : gpu if gpu != null]
+
         content {
           manufacturers = try(gpu.value.manufacturers, [])
           include_names = try(gpu.value.include_names, [])
@@ -103,7 +105,7 @@ resource "castai_node_template" "this" {
       }
 
       dynamic "custom_priority" {
-        for_each = flatten([lookup(constraints.value, "custom_priority", [])])
+        for_each = [for custom_priority in flatten([lookup(constraints.value, "custom_priority", [])]) : custom_priority if custom_priority != null]
 
         content {
           instance_families = try(custom_priority.value.instance_families, [])
@@ -359,11 +361,6 @@ resource "helm_release" "castai_evictor_self_managed" {
   values  = var.evictor_values
 
   set {
-    name  = "replicaCount"
-    value = "0"
-  }
-
-  set {
     name  = "castai-evictor-ext.enabled"
     value = "false"
   }
@@ -406,6 +403,7 @@ resource "helm_release" "castai_pod_pinner" {
   wait             = true
 
   version = var.pod_pinner_version
+  values  = var.pod_pinner_values
 
   set {
     name  = "castai.clusterID"
@@ -465,6 +463,7 @@ resource "helm_release" "castai_pod_pinner_self_managed" {
   wait             = true
 
   version = var.pod_pinner_version
+  values  = var.pod_pinner_values
 
   set {
     name  = "castai.clusterID"
@@ -498,11 +497,6 @@ resource "helm_release" "castai_pod_pinner_self_managed" {
       name  = "podLabels.${set.key}"
       value = set.value
     }
-  }
-
-  set {
-    name  = "replicaCount"
-    value = "0"
   }
 
   depends_on = [helm_release.castai_agent]
@@ -629,7 +623,7 @@ resource "helm_release" "castai_kvisor_self_managed" {
   }
 
   dynamic "set" {
-    for_each = merge(var.kvisor_controller_extra_args.default, var.kvisor_controller_extra_args)
+    for_each = var.kvisor_controller_extra_args
     content {
       name  = "controller.extraArgs.${set.key}"
       value = set.value
